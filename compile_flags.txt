@@ -1,0 +1,6 @@
+-I.
+-Isrc
+-Isrc/sha256
+-Wall
+-Wextra
+-std=c11
