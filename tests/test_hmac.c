@@ -13,7 +13,11 @@ int main(){
     memset(key_one, 0x0b, 20);
     const uint8_t *data_one = (const uint8_t *) "Hi There";
     size_t data_one_len = strlen("Hi There");
-    hmac_sha256(key_one,20,data_one,data_one_len,output);
+    int result = hmac_sha256(key_one,20,data_one,data_one_len,output);
+    if(result != 0){
+        printf("Test case 1 failed; hmac failed \n");
+        return 0;
+    }
     printf("Output: \n");
     for (int i = 0; i < 32; i++) {
         printf("%02x", output[i]);
@@ -25,7 +29,11 @@ int main(){
     uint8_t* key_two = (uint8_t*) "Jefe";
     const uint8_t *data_two = (const uint8_t *) "what do ya want for nothing?";
     size_t data_two_len = strlen("what do ya want for nothing?");
-    hmac_sha256(key_two,4,data_two,data_two_len,output_two);
+    int result_two = hmac_sha256(key_two,4,data_two,data_two_len,output_two);
+    if(result_two != 0){
+        printf("Test case 2 failed; hmac failed\n");
+        return 0;
+    }
     printf("Output: \n");
     for (int i = 0; i < 32; i++) {
         printf("%02x", output_two[i]);
@@ -40,7 +48,11 @@ int main(){
     uint8_t data_three[50];
     memset(data_three, 0xdd, 50);
     size_t data_three_len = 50;
-    hmac_sha256(key_three,20,data_three,data_three_len,output_three);
+    int result_three = hmac_sha256(key_three,20,data_three,data_three_len,output_three);
+    if(result_three != 0){
+        printf("Test case 3 failed; hmac failed\n");
+        return 0;
+    }
     printf("Output: \n");
     for (int i = 0; i < 32; i++) {
         printf("%02x", output_three[i]);
@@ -55,7 +67,11 @@ int main(){
     memset(key_six, 0xaa, 131);
     const uint8_t *data_six = (const uint8_t *) "Test Using Larger Than Block-Size Key - Hash Key First";
     size_t data_six_len = strlen("Test Using Larger Than Block-Size Key - Hash Key First");
-    hmac_sha256(key_six,131,data_six,data_six_len,output_six);
+    int result_six = hmac_sha256(key_six,131,data_six,data_six_len,output_six);
+    if(result_six != 0){
+        printf("Test case 6 failed; hmac failed \n");
+        return 0;
+    }
     printf("Output: \n");
     for (int i = 0; i < 32; i++) {
         printf("%02x", output_six[i]);

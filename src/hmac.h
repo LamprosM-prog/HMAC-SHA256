@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-void hmac_sha256(const uint8_t *key, size_t key_len,
+int hmac_sha256(const uint8_t *key, size_t key_len,
                   const uint8_t *message, size_t message_len,
                   uint8_t *output);
 

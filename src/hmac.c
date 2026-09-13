@@ -9,8 +9,18 @@
 #define IPAD_BYTE 0x36
 #define OPAD_BYTE 0x5c
 
-void hmac_sha256(const uint8_t *key, size_t key_len, const uint8_t *message, size_t message_len, uint8_t *output)
+static void secure_zero(void *buf, size_t len) {
+    volatile uint8_t *p = (volatile uint8_t *)buf;
+    while (len--) {
+        *p++ = 0;
+    }
+}
+
+int hmac_sha256(const uint8_t *key, size_t key_len, const uint8_t *message, size_t message_len, uint8_t *output)
 {
+    if(message == NULL || key == NULL || output == NULL ){
+        return -1;
+    }
     uint8_t k_prime[64];
 
     if(key_len > BLOCK_SIZE){ // if the key is too long it gets hashed and then padded
@@ -26,16 +36,20 @@ void hmac_sha256(const uint8_t *key, size_t key_len, const uint8_t *message, siz
         ipad_key[i] = k_prime[i] ^ IPAD_BYTE;
         opad_key[i] = k_prime[i] ^ OPAD_BYTE;
     }
+    secure_zero(k_prime, 64);
     uint8_t inner_hash[HASH_SIZE];
     SHA256_CTX ctx;
 
     sha256_init(&ctx);
     sha256_update(&ctx, ipad_key, BLOCK_SIZE);
+    secure_zero(ipad_key,64);
     sha256_update(&ctx, message, message_len);
     sha256_final(&ctx, inner_hash);
 
     sha256_init(&ctx);
     sha256_update(&ctx,opad_key,64);
+    secure_zero(opad_key, 64);
     sha256_update(&ctx, inner_hash, HASH_SIZE);
     sha256_final(&ctx, output);
+    return 0;
 }
